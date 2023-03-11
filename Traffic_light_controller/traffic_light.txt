@@ -1,0 +1,125 @@
+module tlc(input clk,rst,output reg [1:0] ns_light,ew_light );
+  
+  parameter s_0=3'b000;
+  parameter s_1=3'b001;
+  parameter s_2=3'b010;
+  parameter s_3=3'b011;
+  parameter s_4=3'b100;
+  parameter s_5=3'b101;
+  
+  parameter red=2'b00;
+  parameter yellow=2'b01;
+  parameter green=2'b10;
+  
+  reg[3:0]state;
+  integer count=0;
+  
+  always @(posedge clk or negedge rst)
+    begin
+      if(rst==1'b0)
+        begin
+          state=s_0;
+          ns_light=green;
+          ew_light=red;
+        end
+      else
+        begin
+          case(state)
+            s_0:
+            begin
+              ns_light=green;
+              ew_light=red;
+              count=count+1;
+              if(count=='d15)
+                begin
+                  state=s_1;
+                  count='d0;
+                end
+              else
+                begin
+                  state=s_0;
+                end
+            end
+            s_1:
+              begin
+                ns_light=yellow;
+                ew_light=red;
+                if(count=='d3)
+                  begin
+                    state=s_2;
+                    count='d0;
+                  end
+                else
+                  begin
+                    state=s_1;
+                    count=count+1;
+                  end
+              end
+            s_2:
+              begin
+                ns_light=red;
+                ew_light=red;
+                if(count=='d3)
+                  begin
+                    state=s_3;
+                    count='d0;
+                  end
+                else
+                  begin
+                    state=s_2;
+                    count=count+1;
+                  end
+              end
+            s_3:
+              begin
+                ns_light=red;
+                ew_light=green;
+                if(count=='d15)
+                  begin
+                    state=s_4;
+                    count='d0;
+                  end
+                else
+                  begin
+                    state=s_3;
+                    count=count+1;
+                  end
+              end
+            s_4:
+                begin
+                ns_light=red;
+                ew_light=yellow;
+                  if(count=='d3)
+                  begin
+                    state=s_5;
+                    count='d0;
+                  end
+                else
+                  begin
+                    state=s_4;
+                    count=count+1;
+                  end
+              end
+               s_4:
+                begin
+                ns_light=red;
+                ew_light=yellow;
+                  if(count=='d3)
+                  begin
+                    state=s_0;
+                    count='d0;
+                  end
+                else
+                  begin
+                    state=s_5;
+                    count=count+1;
+                  end
+              end
+            default:begin
+              state=s_0;
+              count=0;
+            end
+          endcase
+        end
+    end
+endmodule
