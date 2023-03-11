@@ -1,0 +1,17 @@
+module test;
+  reg clk,rst;
+  wire [1:0] ns_light,ew_light;
+  tlc dut(clk,rst,ns_light,ew_light);
+  always #3 clk=~clk;
+  initial begin
+    clk=0;
+    rst=0;
+    #10 rst=1;
+    #200 $stop();
+  end
+  initial begin
+
+    $dumpfile("dump.vcd");
+    $dumpvars;
+  end
+endmodule
