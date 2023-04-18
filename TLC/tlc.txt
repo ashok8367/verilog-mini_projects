@@ -1,0 +1,92 @@
+`timescale 1ns / 1ps
+   
+   
+`define TRUE 1'b1  
+`define FALSE 1'b0     
+
+`define Y2RDELAY 3 
+`define R2GDELAY 2   
+module traffic(hwy,cntry,x,clk,clear);
+output [1:0]hwy;
+output [1:0]cntry;
+reg [1:0]hwy;
+reg [1:0]cntry;
+input x,clk,clear;
+parameter RED=2'd0,
+          YELLOW=2'd1,
+          GREEN=2'd2;
+          
+parameter s0=3'd0,
+          s1=3'd1,
+          s2=3'd2,
+          s3=3'd3,
+          s4=3'd4;
+          
+reg[2:0]state;
+reg[2:0]nextstate;
+always@(state or x)
+begin
+case(state)
+s0:if(x)
+    nextstate = s1;
+    else
+    nextstate=s0;
+    
+s1:begin
+    repeat(`Y2RDELAY) nextstate=s1;
+    nextstate=s2;
+    end
+s2:begin
+    repeat(`R2GDELAY) nextstate=s2;
+    nextstate=s3;
+    end
+  
+s3:if(x)
+    nextstate = s3;
+    else
+    nextstate=s4;  
+    
+s4:begin
+    repeat(`Y2RDELAY) nextstate=s4;
+    nextstate=s0;
+    end 
+    
+default: nextstate=s0;  
+endcase
+end
+always @(posedge clk)
+begin
+if(clear)
+state<=s0;
+else
+state<=nextstate;
+end
+
+always@(state)
+begin
+hwy=GREEN;
+cntry=RED;
+case(state)
+s0: begin
+hwy=GREEN;
+cntry=RED;
+end
+s1: begin
+hwy=YELLOW;
+cntry=RED;
+end
+s2: begin
+hwy=RED;
+cntry=RED;
+end
+s3: begin
+hwy=RED;
+cntry=GREEN;
+end
+s3: begin
+hwy=RED;
+cntry=YELLOW;
+end
+endcase
+end
+endmodule
