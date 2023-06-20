@@ -1,125 +1,171 @@
-module tlc(input clk,rst,output reg [1:0] ns_light,ew_light );
-  
-  parameter s_0=3'b000;
-  parameter s_1=3'b001;
-  parameter s_2=3'b010;
-  parameter s_3=3'b011;
-  parameter s_4=3'b100;
-  parameter s_5=3'b101;
-  
-  parameter red=2'b00;
-  parameter yellow=2'b01;
-  parameter green=2'b10;
-  
-  reg[3:0]state;
-  integer count=0;
-  
-  always @(posedge clk or negedge rst)
-    begin
-      if(rst==1'b0)
-        begin
-          state=s_0;
-          ns_light=green;
-          ew_light=red;
-        end
-      else
-        begin
-          case(state)
-            s_0:
-            begin
-              ns_light=green;
-              ew_light=red;
-              count=count+1;
-              if(count=='d15)
-                begin
-                  state=s_1;
-                  count='d0;
-                end
-              else
-                begin
-                  state=s_0;
-                end
-            end
-            s_1:
-              begin
-                ns_light=yellow;
-                ew_light=red;
-                if(count=='d3)
-                  begin
-                    state=s_2;
-                    count='d0;
-                  end
-                else
-                  begin
-                    state=s_1;
-                    count=count+1;
-                  end
-              end
-            s_2:
-              begin
-                ns_light=red;
-                ew_light=red;
-                if(count=='d3)
-                  begin
-                    state=s_3;
-                    count='d0;
-                  end
-                else
-                  begin
-                    state=s_2;
-                    count=count+1;
-                  end
-              end
-            s_3:
-              begin
-                ns_light=red;
-                ew_light=green;
-                if(count=='d15)
-                  begin
-                    state=s_4;
-                    count='d0;
-                  end
-                else
-                  begin
-                    state=s_3;
-                    count=count+1;
-                  end
-              end
-            s_4:
-                begin
-                ns_light=red;
-                ew_light=yellow;
-                  if(count=='d3)
-                  begin
-                    state=s_5;
-                    count='d0;
-                  end
-                else
-                  begin
-                    state=s_4;
-                    count=count+1;
-                  end
-              end
-               s_4:
-                begin
-                ns_light=red;
-                ew_light=yellow;
-                  if(count=='d3)
-                  begin
-                    state=s_0;
-                    count='d0;
-                  end
-                else
-                  begin
-                    state=s_5;
-                    count=count+1;
-                  end
-              end
-            default:begin
-              state=s_0;
-              count=0;
-            end
-          endcase
-        end
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 11.05.2023 16:18:50
+// Design Name: 
+// Module Name: 
+// Project Name: Traffic Light Controller
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// Author Name:v.ashok
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comment0s:
+////////////////////////////////////////
+
+
+ module tlc(input clk,
+            input rst,
+            input v_detect,
+            output reg[3:0]ns_light,
+            output reg[3:0]ew_light
+            );
+            
+            
+ parameter s_0='b0;
+ parameter s_1='b1;
+ parameter s_2='b10;
+ parameter s_3='b11;
+ parameter s_4='b100;
+ parameter s_5='b101;
+ 
+ parameter RED='b110;
+ parameter YELLOW='b111;
+ parameter GREEN='b1000;
+ 
+ integer i=1;
+ reg[2:0]state;
+ reg [3:0] delay_counter;
+ reg [8*7:0]ns_lights;
+ reg [8*7:0]ew_lights;
+ 
+   always @(posedge clk or posedge rst) begin
+    if (rst) begin
+      state <= s_0;
+      ns_light <= GREEN;
+      ew_light <= RED;
+      ns_lights <= "GREEN";
+      ew_lights <= "RED";
+      delay_counter <= 0;
     end
+    else begin
+      case (state)
+        s_0: begin
+          if (delay_counter=='d14) begin
+            state <= s_1;
+            ns_light <= YELLOW;
+            ew_light <= RED;
+            ns_lights <= "YELLOW";
+            ew_lights <= "RED";
+            delay_counter <= 0;
+          end 
+          else begin
+            delay_counter <= delay_counter + 1;
+            state <=s_0;
+            ns_lights <= "GREEN";
+            ew_lights <= "RED";
+          end
+        end
+        
+        s_1: begin
+          if (delay_counter == 'd3) begin
+            state <= s_2;
+            ns_light <= RED;
+            ew_light <= RED;
+            ns_lights <= "RED";
+            ew_lights <= "RED";
+            delay_counter <= 0;
+          end
+          else begin
+            delay_counter <= delay_counter + 1;
+            state<=s_1;
+            ns_lights <= "YELLOW";
+            ew_lights <= "RED";            
+          end
+        end
+        
+        s_2: begin
+          if (delay_counter == 'd3) begin
+            state <= s_3;
+            ns_light <= RED;
+            ew_light <= GREEN;
+            ns_lights <= "RED";
+            ew_lights <= "GREEN";
+            delay_counter <= 0;
+          end
+          else begin
+            delay_counter <= delay_counter + 1;
+            state<=s_2; 
+            ns_lights <= "RED";
+            ew_lights <= "RED";
+            
+          end
+          end
+          
+        s_3: begin
+          if (delay_counter == 'd14) begin
+            state <= s_4;
+            ns_light <= RED;
+            ew_light <= YELLOW;
+            ns_lights <= "RED";
+            ew_lights <= "YELLOW";
+            delay_counter <= 0;
+          end
+          else begin
+            delay_counter <= delay_counter + 1;
+            state<=s_3;
+            ns_lights <= "RED";
+            ew_lights <= "GREEN";
+          end
+        end
+        
+        s_4: begin
+          if (delay_counter == 'd3) begin
+            state <= s_5;
+            ns_light <= RED;
+            ew_light <= RED;
+            ns_lights <= "RED";
+            ew_lights <= "RED";
+            delay_counter <= 0;
+          end
+          else begin
+            delay_counter <= delay_counter + 1;
+            state<=s_4;
+            ns_lights <= "RED";
+            ew_lights <= "YELLOW";
+          end
+        end
+        
+        s_5: begin
+          if (delay_counter == 'd3) begin
+            state <= s_0;
+            ns_light <= GREEN;
+            ew_light <= RED;
+            ns_lights <= "GREEN";
+            ew_lights <= "RED";
+            delay_counter <= 0;
+          end
+          else begin
+            delay_counter <= delay_counter + 1;
+            state<=s_5;
+            ns_lights <= "RED";
+            ew_lights <= "RED";
+          end
+          end
+          default:begin
+              state<=s_0;
+              ns_light <= GREEN;
+              ew_light <= RED;
+              ns_lights <= "GREEN";
+              ew_lights <= "RED";
+              delay_counter <= 0;
+            end
+      endcase
+    end
+  end
 endmodule
