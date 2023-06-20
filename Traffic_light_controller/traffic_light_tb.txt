@@ -1,17 +1,64 @@
-module test;
-  reg clk,rst;
-  wire [1:0] ns_light,ew_light;
-  tlc dut(clk,rst,ns_light,ew_light);
-  always #3 clk=~clk;
-  initial begin
-    clk=0;
-    rst=0;
-    #10 rst=1;
-    #200 $stop();
-  end
-  initial begin
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 16.06.2023 18:40:39
+// Design Name: 
+// Module Name: tbseq
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
 
-    $dumpfile("dump.vcd");
-    $dumpvars;
+
+module tlc_tb;
+  
+  reg clk;
+  reg rst;
+  reg v_detect;
+  wire [3:0] ns_light;
+  wire [3:0] ew_light;
+
+  // Instantiate the traffic light controller module
+  tlc dut (
+    .clk(clk),
+    .rst(rst),
+    .ns_light(ns_light),
+    .v_detect(v_detect),
+    .ew_light(ew_light)
+  );
+
+  // Clock generation
+  always begin
+    #5 clk = ~clk;
   end
+
+  // Stimulus
+  initial begin
+    clk = 1;
+    rst = 1;
+    v_detect=0;
+   
+
+  
+
+    // Wait for a few clock cycles after reset
+    #10 rst = 0; v_detect=1;
+
+    // Monitor the values of ns_light and ew_light
+  
+
+    // Run the simulation for 100 clock cycles
+   
+  end
+
 endmodule
