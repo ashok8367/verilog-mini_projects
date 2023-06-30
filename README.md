@@ -6,3 +6,5 @@
 
 3. Voting Meachine
 
+4. Vending Meachine
+
