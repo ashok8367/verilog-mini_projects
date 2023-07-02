@@ -8,3 +8,5 @@
 
 4. Vending Meachine
 
+5. Washing Meachine
+
