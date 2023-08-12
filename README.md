@@ -10,3 +10,7 @@
 
 5. Washing Meachine
 
+6. Synchronous FIFO
+
+7. Basic SPI Protocol Implementation in Verilog
+
