@@ -4,13 +4,15 @@
 
 2. Traffic light controller
 
-3. Voting Meachine
+3. Parity Checker
 
-4. Vending Meachine
+4. Voting Meachine
 
-5. Washing Meachine
+5. Vending Meachine
 
-6. Synchronous FIFO
+6. Washing Meachine
 
-7. Basic SPI Protocol Implementation in Verilog
+7. Synchronous FIFO
+
+8. Basic SPI Protocol Implementation in Verilog
 
