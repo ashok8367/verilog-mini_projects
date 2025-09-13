@@ -6,13 +6,11 @@
 
 3. Parity Checker
 
-4. Voting Meachine
+4. Vending Meachine
 
-5. Vending Meachine
+5. Washing Meachine
 
-6. Washing Meachine
+6. Synchronous FIFO
 
-7. Synchronous FIFO
-
-8. UART Protocol Implementation in Verilog
+7. UART Protocol Implementation in Verilog
 
