@@ -14,5 +14,5 @@
 
 7. Synchronous FIFO
 
-8. Basic SPI Protocol Implementation in Verilog
+8. UART Protocol Implementation in Verilog
 
